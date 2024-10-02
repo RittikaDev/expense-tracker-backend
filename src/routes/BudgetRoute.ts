@@ -1,13 +1,19 @@
 import { Router } from "express";
+import { verifyJWT } from "../middleware/authMiddleware";
+
 import Budget from "../models/Budget";
 import Transaction from "../models/Transaction";
 
 const router = Router();
 
-router.post("/", async (req, res) => {
+router.post("/:userId", verifyJWT, async (req: any, res: any) => {
 	const { category, budget, date } = req.body;
+	const { userId } = req.params;
+
+	if (req.user !== userId) return res.status(201).json([]);
+
 	try {
-		const newBudget = new Budget({ category, budget, date });
+		const newBudget = new Budget({ category, budget, date, userId });
 		await newBudget.save();
 		res.status(201).json(newBudget);
 	} catch (err) {
@@ -15,26 +21,29 @@ router.post("/", async (req, res) => {
 	}
 });
 
-router.get("/:year/:month", async (req, res) => {
+router.get("/:userId/:year/:month", verifyJWT, async (req: any, res: any) => {
 	try {
-		const { year, month } = req.params;
+		const { userId, year, month } = req.params;
 
-		const queryYear = parseInt(year);
-		const queryMonth = parseInt(month);
+		if (req.user !== userId) return res.status(201).json([]);
 
-		const startOfMonth = new Date(queryYear, queryMonth - 1, 1);
-		const startOfNextMonth = new Date(queryYear, queryMonth, 1);
+		const startOfMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
+		const startOfNextMonth = new Date(parseInt(year), parseInt(month), 1);
 
 		const budgets = await Budget.find({
+			userId,
 			date: {
 				$gte: startOfMonth,
 				$lt: startOfNextMonth,
 			},
 		});
 
+		if (budgets.length === 0) return res.status(201).json([]);
+
 		const actualSpendings = await Transaction.aggregate([
 			{
 				$match: {
+					userId,
 					date: {
 						$gte: startOfMonth,
 						$lt: startOfNextMonth,
@@ -67,43 +76,49 @@ router.get("/:year/:month", async (req, res) => {
 });
 
 router.get(
-	"/check-budget/:category/:amount/:year/:month",
+	"/check-budget/:userId/:category/:amount/:year/:month",
+	verifyJWT,
 	async (
 		req: {
-			params: { category: string; amount: number; year: number; month: number };
+			params: {
+				userId: string;
+				category: string;
+				amount: number;
+				year: number;
+				month: number;
+			};
 		},
 		res: any
 	) => {
-		const { category, amount, year, month } = req.params;
-		const transactionAmount = amount;
-		const transactionYear = year;
-		const transactionMonth = month;
+		const { userId, category, amount, year, month } = req.params;
 
-		const transactionDate = new Date(transactionYear, transactionMonth - 1);
+		const startOfMonth = new Date(year, month - 1, 1); // START OF THE MONTH
+		const startOfNxtMonth = new Date(year, month, 1); // START OF THE NEXT MONTH
 
 		try {
 			const budgetEntry = await Budget.findOne({
+				userId,
 				category,
 				date: {
-					$gte: new Date(transactionYear, transactionMonth - 1, 1), // Start of the month
-					$lt: new Date(transactionYear, transactionMonth, 1), // Start of the next month
+					$gte: startOfMonth,
+					$lt: startOfNxtMonth,
 				},
 			});
 
-			if (!budgetEntry) {
+			if (!budgetEntry)
 				return res
 					.status(404)
 					.json({ error: "Budget not found for this category" });
-			}
 
-			// Calculate the total spent in the same category and month
+			// CALCULATING TOTAL SPENT IN THE SAME CATEGORY AND MONTH
 			const actualSpendings = await Transaction.aggregate([
 				{
 					$match: {
+						userId,
 						category,
 						date: {
-							$gte: new Date(transactionYear, transactionMonth - 1, 1), // Start of the month
-							$lt: new Date(transactionYear, transactionMonth, 1), // Start of the next month
+							$gte: startOfMonth,
+							$lt: startOfNxtMonth,
 						},
 					},
 				},
@@ -117,16 +132,13 @@ router.get(
 
 			const totalSpent = actualSpendings[0]?.totalSpent || 0;
 
-			// Calculate remaining budget
+			// CALCULATING REMAINING BUDGET
 			const remainingBudget = budgetEntry.budget - totalSpent;
 
-			console.log(remainingBudget, transactionAmount);
-
-			if (remainingBudget < transactionAmount) {
+			if (remainingBudget < amount)
 				return res
 					.status(400)
 					.json({ error: "Transaction exceeds the budget for this category." });
-			}
 
 			res.status(200).json({ message: "Transaction is within the budget." });
 		} catch (err) {

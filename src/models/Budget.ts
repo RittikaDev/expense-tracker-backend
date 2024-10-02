@@ -1,20 +1,16 @@
 import { Schema, model, Document } from "mongoose";
 
 interface IBudget extends Document {
+	userId: string;
 	category: string;
 	budget: number;
 	date: Date;
 }
 
 const BudgetSchema = new Schema<IBudget>({
-	category: {
-		type: String,
-		required: true,
-	},
-	budget: {
-		type: Number,
-		required: true,
-	},
+	userId: { type: String, required: true },
+	category: { type: String, required: true },
+	budget: { type: Number, required: true },
 	date: { type: Date, required: true },
 });
 

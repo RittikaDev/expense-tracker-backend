@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 
+import AuthenticateRoute from "./routes/AuthenticateRoute";
 import budgetRoutes from "./routes/BudgetRoute";
 import transactionRoutes from "./routes/TransactionRoute";
 
@@ -27,6 +28,7 @@ mongoose
 	.catch((err) => console.log(err));
 
 // ROUTES
+app.use("/api/authenticate", AuthenticateRoute);
 app.use("/api/budgets", budgetRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.get("/", (req, res) => {
