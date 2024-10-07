@@ -18,10 +18,9 @@ router.post("/", async (req: AuthRequest, res: Response) => {
 	try {
 		const decodedToken = await admin.auth().verifyIdToken(firebaseToken);
 		const uid = decodedToken.uid;
-
 		const jwtSecret = process.env.JWT_TOKEN || "fallback_secret";
 		const jwtToken = jwt.sign({ uid: uid }, jwtSecret, {
-			expiresIn: "1h",
+			expiresIn: "4h",
 		});
 		res.json({ token: jwtToken });
 	} catch (error) {

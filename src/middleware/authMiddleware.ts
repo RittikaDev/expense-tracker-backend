@@ -20,10 +20,19 @@ export const verifyJWT = (
 
 	try {
 		const jwtSecret = process.env.JWT_TOKEN || "fallback_secret";
-		const decoded = jwt.verify(token, jwtSecret) as JwtPayload;
+		const decoded: any = jwt.verify(token, jwtSecret) as JwtPayload;
+
+		const currentTime = Math.floor(Date.now() / 1000);
+
+		// Check if the token has expired
+		if (decoded.exp < currentTime) {
+			res.status(403).json({ error: "Token expired." });
+			return;
+		}
+
 		req.user = decoded.uid;
 		next();
-	} catch (err) {
+	} catch (err: any) {
 		res.status(403).json({ error: "Invalid token." });
 	}
 };

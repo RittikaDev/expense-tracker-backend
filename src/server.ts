@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 
 import AuthenticateRoute from "./routes/AuthenticateRoute";
+import incomeRoutes from "./routes/IncomeRoute";
 import budgetRoutes from "./routes/BudgetRoute";
 import transactionRoutes from "./routes/TransactionRoute";
 
@@ -29,6 +30,7 @@ mongoose
 
 // ROUTES
 app.use("/api/authenticate", AuthenticateRoute);
+app.use("/api/income", incomeRoutes);
 app.use("/api/budgets", budgetRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.get("/", (req, res) => {
