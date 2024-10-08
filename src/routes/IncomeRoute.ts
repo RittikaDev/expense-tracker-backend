@@ -24,6 +24,19 @@ router.post("/:userId", verifyJWT, async (req: any, res: any) => {
 	}
 });
 
+router.get("/:userId", verifyJWT, async (req: any, res: any) => {
+	try {
+		const { userId } = req.params;
+
+		if (req.user !== userId) return res.status(201).json([]);
+
+		const income = await Income.find({ userId });
+		res.json(income);
+	} catch {
+		res.status(500).json({ error: "Failed to fetch income lists" });
+	}
+});
+
 router.get("/:userId/:year/:month", verifyJWT, async (req: any, res: any) => {
 	try {
 		const { userId, year, month } = req.params;

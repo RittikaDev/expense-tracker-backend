@@ -29,6 +29,31 @@ router.get("/:userId", verifyJWT, async (req: any, res: any) => {
 	}
 });
 
+router.get("/:userId/:year/:month", verifyJWT, async (req: any, res: any) => {
+	try {
+		const { userId, year, month } = req.params;
+
+		if (req.user !== userId) return res.status(201).json([]);
+
+		const startOfMonth = new Date(parseInt(year), parseInt(month) - 1, 1);
+		const startOfNextMonth = new Date(parseInt(year), parseInt(month), 1);
+
+		const transaction = await Transaction.find({
+			userId,
+			date: {
+				$gte: startOfMonth,
+				$lt: startOfNextMonth,
+			},
+		});
+
+		if (transaction.length === 0) return res.status(201).json([]);
+
+		res.json(transaction);
+	} catch {
+		res.status(500).json({ error: "Failed to fetch transaction entries" });
+	}
+});
+
 router.post("/:userId", verifyJWT, async (req: any, res: any) => {
 	const transactions = req.body;
 	const { userId } = req.params;
