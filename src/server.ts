@@ -6,6 +6,7 @@ import AuthenticateRoute from "./routes/AuthenticateRoute";
 import incomeRoutes from "./routes/IncomeRoute";
 import budgetRoutes from "./routes/BudgetRoute";
 import transactionRoutes from "./routes/TransactionRoute";
+import savingGoalRoutes from "./routes/SavingGoalRoute";
 
 require("dotenv").config();
 
@@ -33,6 +34,7 @@ app.use("/api/authenticate", AuthenticateRoute);
 app.use("/api/income", incomeRoutes);
 app.use("/api/budgets", budgetRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/savinggoal", savingGoalRoutes);
 app.get("/", (req, res) => {
 	res.send("API is running");
 });
