@@ -2,11 +2,14 @@
 	"name": "expense-tracker-backend",
 	"version": "1.0.0",
 	"description": "A node js project named expense-tracker",
-	"main": "dist/server.js",
+	"main": "src/server.ts",
+	"engines": {
+		"node": "20.10.0"
+	},
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"build": "tsc",
-		"start": "node dist/server.js"
+		"start": "node dist/src/server.js"
 	},
 	"author": "",
 	"license": "MIT",
