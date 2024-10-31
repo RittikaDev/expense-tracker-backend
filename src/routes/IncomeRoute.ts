@@ -38,6 +38,8 @@ router.get("/:userId", verifyJWT, async (req: any, res: any) => {
 });
 
 router.get("/:userId/:year/:month", verifyJWT, async (req: any, res: any) => {
+	const { userId, year, month } = req.params;
+	console.log(userId, year, month);
 	try {
 		const { userId, year, month } = req.params;
 
@@ -63,7 +65,7 @@ router.get("/:userId/:year/:month", verifyJWT, async (req: any, res: any) => {
 		}));
 		res.json(totalIncome);
 	} catch (err) {
-		res.status(500).json({ error: "Failed to fetch budget entries" });
+		res.status(500).json({ error: "Failed to fetch income entries" });
 	}
 });
 
