@@ -22,7 +22,6 @@
 		"@types/cors": "^2.8.17",
 		"@types/express": "^5.0.0",
 		"@types/mongoose": "^5.11.97",
-		"@types/node": "^22.7.4",
-		"typescript": "^5.0.0"
+		"@types/node": "^22.7.4"
 	}
 }
