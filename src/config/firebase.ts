@@ -1,5 +1,5 @@
 import admin from "firebase-admin";
-import serviceAccount from "../../firebase-config/et-firebase-service-account.json";
+// import serviceAccount from "../../firebase-config/et-firebase-service-account.json";
 import { ServiceAccount } from "firebase-admin";
 require("dotenv").config();
 
