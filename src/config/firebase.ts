@@ -1,6 +1,7 @@
 import admin from "firebase-admin";
 import serviceAccount from "../../firebase-config/et-firebase-service-account.json";
 import { ServiceAccount } from "firebase-admin";
+require("dotenv").config();
 
 const firebaseConfig = {
 	type: process.env.FIREBASE_TYPE,
@@ -15,6 +16,8 @@ const firebaseConfig = {
 	client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
 	universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
+
+console.log(firebaseConfig);
 
 admin.initializeApp({
 	// credential: admin.credential.cert(serviceAccount as ServiceAccount),
