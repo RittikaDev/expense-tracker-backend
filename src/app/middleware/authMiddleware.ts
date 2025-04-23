@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 interface AuthenticatedRequest extends Request {
-	user?: JwtPayload | string;
+	authUser?: string; // Renamed to avoid conflict with 'user'
 	uid?: string;
 }
 
@@ -30,7 +30,7 @@ export const verifyJWT = (
 			return;
 		}
 
-		req.user = decoded.uid;
+		req.authUser = decoded.uid; // Updated to match the renamed property
 		next();
 	} catch (err: any) {
 		res.status(403).json({ error: "Invalid token." });

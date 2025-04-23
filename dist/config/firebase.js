@@ -19,7 +19,7 @@ const firebaseConfig = {
     client_x509_cert_url: process.env.FIREBASE_CLIENT_CERT_URL,
     universe_domain: process.env.FIREBASE_UNIVERSE_DOMAIN,
 };
-console.log(firebaseConfig);
+// console.log(firebaseConfig);
 firebase_admin_1.default.initializeApp({
     // credential: admin.credential.cert(serviceAccount as ServiceAccount),
     credential: firebase_admin_1.default.credential.cert(firebaseConfig),

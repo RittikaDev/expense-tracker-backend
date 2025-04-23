@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { verifyJWT } from "../middleware/authMiddleware";
+import { verifyJWT } from "../app/middleware/authMiddleware";
 
 import SavingGoal from "../models/SavingGoal";
 import Income from "../models/Income";

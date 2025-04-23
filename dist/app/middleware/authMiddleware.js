@@ -21,7 +21,7 @@ const verifyJWT = (req, res, next) => {
             res.status(403).json({ error: "Token expired." });
             return;
         }
-        req.user = decoded.uid;
+        req.authUser = decoded.uid; // Updated to match the renamed property
         next();
     }
     catch (err) {

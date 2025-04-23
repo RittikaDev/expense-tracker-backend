@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const authMiddleware_1 = require("../middleware/authMiddleware");
+const authMiddleware_1 = require("../app/middleware/authMiddleware");
 const Budget_1 = __importDefault(require("../models/Budget"));
 const Transaction_1 = __importDefault(require("../models/Transaction"));
 const router = (0, express_1.Router)();

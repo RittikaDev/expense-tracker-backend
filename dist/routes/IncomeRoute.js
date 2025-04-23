@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
-const authMiddleware_1 = require("../middleware/authMiddleware");
+const authMiddleware_1 = require("../app/middleware/authMiddleware");
 const Income_1 = __importDefault(require("../models/Income"));
 const GetDate_1 = require("../reusable/GetDate");
 const router = (0, express_1.Router)();
@@ -44,6 +44,8 @@ router.get("/:userId", authMiddleware_1.verifyJWT, (req, res) => __awaiter(void 
     }
 }));
 router.get("/:userId/:year/:month", authMiddleware_1.verifyJWT, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, year, month } = req.params;
+    console.log(userId, year, month);
     try {
         const { userId, year, month } = req.params;
         if (req.user !== userId)
@@ -67,7 +69,7 @@ router.get("/:userId/:year/:month", authMiddleware_1.verifyJWT, (req, res) => __
         res.json(totalIncome);
     }
     catch (err) {
-        res.status(500).json({ error: "Failed to fetch budget entries" });
+        res.status(500).json({ error: "Failed to fetch income entries" });
     }
 }));
 router.get("/totalincome/:userId", authMiddleware_1.verifyJWT, (req, res) => __awaiter(void 0, void 0, void 0, function* () {

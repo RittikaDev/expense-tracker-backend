@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Transaction from "../models/Transaction";
-import { verifyJWT } from "../middleware/authMiddleware";
+import { verifyJWT } from "../app/middleware/authMiddleware";
 import {
 	getCurrentMonthRange,
 	getPreviousMonthRange,
